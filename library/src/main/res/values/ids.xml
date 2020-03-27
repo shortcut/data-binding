@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="db_helper__material_button_toggle_group__listener" type="id" />
+    <item name="db_helper__view_pager_2__listener" type="id" />
+    <item name="db_helper__recycler_view__item_decoration" type="id" />
+</resources>
