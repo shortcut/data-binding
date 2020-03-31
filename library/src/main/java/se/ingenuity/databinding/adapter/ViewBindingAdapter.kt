@@ -24,8 +24,8 @@ object ViewBindingAdapter {
         visible: Boolean,
         transition: Transition?,
         @IdRes transitionRoot: Int?,
-        includeTargets: List<Int>?,
-        excludeTargets: List<Int>?
+        includeTargets: Any?,
+        excludeTargets: Any?
     ) {
         beginDelayedTransition(transition, transitionRoot, includeTargets, excludeTargets)
 
@@ -47,8 +47,8 @@ object ViewBindingAdapter {
         visible: Boolean,
         transition: Transition?,
         @IdRes transitionRoot: Int?,
-        includeTargets: List<Int>?,
-        excludeTargets: List<Int>?
+        includeTargets: Any?,
+        excludeTargets: Any?
     ) {
         beginDelayedTransition(transition, transitionRoot, includeTargets, excludeTargets)
 
@@ -58,8 +58,8 @@ object ViewBindingAdapter {
     private fun View.beginDelayedTransition(
         transition: Transition?,
         @IdRes transitionRoot: Int?,
-        includeTargets: List<Int>?,
-        excludeTargets: List<Int>?
+        includeTarget: Any?,
+        excludeTarget: Any?
     ) {
         if (transition != null) {
             val root = if (transitionRoot != null) {
@@ -68,15 +68,49 @@ object ViewBindingAdapter {
                 parent as View
             } ?: parent as View
 
-            includeTargets?.forEach { targetId ->
-                transition.addTarget(targetId)
-            }
-
-            excludeTargets?.forEach { targetId ->
-                transition.excludeTarget(targetId, true)
-            }
+            transition.includeTarget(includeTarget, 0)
+            transition.excludeTarget(excludeTarget, 0)
 
             TransitionManager.beginDelayedTransition(root as ViewGroup, transition)
+        }
+    }
+
+    private fun Transition.includeTarget(target: Any?, recursionLevel: Int) {
+        if (recursionLevel > 1) {
+            return
+        }
+        when (target) {
+            is Class<*> -> addTarget(target)
+            is Int -> addTarget(target)
+            is String -> addTarget(target)
+            is View -> addTarget(target)
+            is Collection<*> -> {
+                if (recursionLevel > 0) {
+                    return
+                }
+
+                target.forEach {
+                    includeTarget(it, recursionLevel + 1)
+                }
+            }
+        }
+    }
+
+    private fun Transition.excludeTarget(target: Any?, recursionLevel: Int) {
+        when (target) {
+            is Class<*> -> excludeTarget(target, true)
+            is Int -> excludeTarget(target, true)
+            is String -> excludeTarget(target, true)
+            is View -> excludeTarget(target, true)
+            is Collection<*> -> {
+                if (recursionLevel > 0) {
+                    return
+                }
+
+                target.forEach {
+                    excludeTarget(it, recursionLevel + 1)
+                }
+            }
         }
     }
 }
