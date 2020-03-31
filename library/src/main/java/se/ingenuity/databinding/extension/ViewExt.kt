@@ -6,7 +6,7 @@ import androidx.annotation.IdRes
 fun View.findParentById(@IdRes id: Int): View? {
     var parent = this.parent
 
-    while ((parent as? View)?.id != id) {
+    while (parent != null && (parent as? View)?.id != id) {
         parent = parent.parent
     }
 
