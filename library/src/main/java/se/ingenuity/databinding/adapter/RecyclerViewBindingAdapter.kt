@@ -53,6 +53,8 @@ object RecyclerViewBindingAdapter {
     @JvmStatic
     @BindingAdapter("currentPosition")
     fun setCurrentPosition(rv: RecyclerView, pos: Int) {
-        (rv.layoutManager as LinearLayoutManager).scrollToPosition(pos)
+        if (pos != 0) {
+            (rv.layoutManager as LinearLayoutManager).scrollToPosition(pos)
+        }
     }
 }
