@@ -43,8 +43,7 @@ object ViewPager2BindingAdapter {
         ],
         requireAll = false
     )
-    fun setListener(
-        view: ViewPager2,
+    fun ViewPager2.setListener(
         onPageSelected: OnPageSelected?,
         currentItemAttrChange: InverseBindingListener?,
         onPageScrolled: OnPageScrolled?,
@@ -82,13 +81,13 @@ object ViewPager2BindingAdapter {
             }
 
         val oldListener = ListenerUtil.trackListener(
-            view,
+            this,
             newListener,
             R.id.db_helper__view_pager_2__listener
         )
 
-        oldListener?.let(view::unregisterOnPageChangeCallback)
-        newListener?.let(view::registerOnPageChangeCallback)
+        oldListener?.also(::unregisterOnPageChangeCallback)
+        newListener?.also(::registerOnPageChangeCallback)
     }
 
 
