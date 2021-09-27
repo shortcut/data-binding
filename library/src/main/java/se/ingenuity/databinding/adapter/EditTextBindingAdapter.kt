@@ -4,16 +4,13 @@ import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.databinding.BindingAdapter
+import se.ingenuity.databinding.adapter.EditTextBindingAdapter.onFinishedEditing
 
 object EditTextBindingAdapter {
 
     @JvmStatic
-    @BindingAdapter("onFinishEditing")
-    fun setOnFinishEditing(view: EditText, onFinishEditing: () -> Unit) {
-        view.onFinishedEditing(onFinishEditing)
-    }
-
-    private fun EditText.onFinishedEditing(onFinishedEditing: () -> Unit) {
+    @BindingAdapter("onSubmit")
+    fun EditText.onSubmit(onSubmit: () -> Unit) {
         this.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                 actionId == EditorInfo.IME_ACTION_DONE ||
@@ -21,7 +18,7 @@ object EditTextBindingAdapter {
                 event.action == KeyEvent.ACTION_DOWN &&
                 event.keyCode == KeyEvent.KEYCODE_ENTER) {
                 if (event == null || !event.isShiftPressed) {
-                    onFinishedEditing()
+                    onSubmit()
                 }
             }
             false
